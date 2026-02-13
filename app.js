@@ -352,6 +352,7 @@ class App {
         }
 
         modal.classList.add('active');
+        modal.style.display = 'flex';
     }
 
     handlePersonelSubmit(e) {
@@ -503,6 +504,7 @@ class App {
 
         this.updatePuantajCalculation();
         modal.classList.add('active');
+        modal.style.display = 'flex';
     }
 
     updatePuantajCalculation() {
@@ -946,11 +948,16 @@ class App {
 
     // ===== Helper Functions =====
     closePersonelModal() {
-        document.getElementById('personelModal').classList.remove('active');
+        const modal = document.getElementById('personelModal');
+        modal.classList.remove('active');
+        modal.style.display = 'none';
+        this.currentEditPersonelId = null;
     }
 
     closePuantajModal() {
-        document.getElementById('puantajModal').classList.remove('active');
+        const modal = document.getElementById('puantajModal');
+        modal.classList.remove('active');
+        modal.style.display = 'none';
         this.currentEditPuantajId = null;
     }
 
@@ -1037,14 +1044,7 @@ class App {
         html2pdf().set(opt).from(element).save();
     }
 
-    // ===== Modal Functions =====
-    closePersonelModal() {
-        document.getElementById('personelModal').classList.remove('active');
-    }
 
-    closePuantajModal() {
-        document.getElementById('puantajModal').classList.remove('active');
-    }
 
     // ===== Auth Functions =====
     handleLogin(e) {
