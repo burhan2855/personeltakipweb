@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personel Takip ve Bordro Sistemi</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Login Screen -->
+    <div class="login-container" id="loginContainer">
+        <div class="login-card">
+            <div class="login-logo">
+                <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
+                    <path
+                        d="M20 12C17.2 12 15 14.2 15 17C15 19.8 17.2 22 20 22C22.8 22 25 19.8 25 17C25 14.2 22.8 12 20 12ZM20 28C15 28 11 25.5 11 23V21C11 19.3 15 17 20 17C25 17 29 19.3 29 21V23C29 25.5 25 28 20 28Z"
+                        fill="white" />
+                </svg>
+            </div>
+            <h1 class="login-title">Giriş Yap</h1>
+            <p class="login-subtitle">Personel Takip Sistemine Hoşgeldiniz</p>
+
+            <form id="loginForm" class="login-form" onsubmit="app.handleLogin(event)">
+                <div class="form-group">
+                    <label>Kullanıcı Adı</label>
+                    <input type="text" id="username" class="form-input" placeholder="Kullanıcı adınız" required>
+                </div>
+                <div class="form-group">
+                    <label>Şifre</label>
+                    <input type="password" id="password" class="form-input" placeholder="********" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-login">Giriş Yap</button>
+                <div id="loginError" class="login-error">
+                    Hatalı kullanıcı adı veya şifre!
+                </div>
+                <div class="login-hint">
+                    Varsayılan: admin / 123456
+                </div>
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; font-size: 14px;">
+                    Hesabınız yok mu? <a href="#" onclick="app.showRegister(event)"
+                        style="color: var(--primary); text-decoration: none; font-weight: 600;">Kayıt Ol</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register Screen -->
+    <div class="login-container" id="registerContainer" style="display: none;">
+        <div class="login-card">
+            <div class="login-logo">
+                <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
+                    <path
+                        d="M20 12C17.2 12 15 14.2 15 17C15 19.8 17.2 22 20 22C22.8 22 25 19.8 25 17C25 14.2 22.8 12 20 12ZM20 28C15 28 11 25.5 11 23V21C11 19.3 15 17 20 17C25 17 29 19.3 29 21V23C29 25.5 25 28 20 28Z"
+                        fill="white" />
+                </svg>
+            </div>
+            <h1 class="login-title">Kayıt Ol</h1>
+            <p class="login-subtitle">Yeni hesap oluşturun</p>
+
+            <form id="registerForm" class="login-form" onsubmit="app.handleRegister(event)">
+                <div class="form-group">
+                    <label>Ad Soyad</label>
+                    <input type="text" id="regName" class="form-input" placeholder="Adınız Soyadınız" required>
+                </div>
+                <div class="form-group">
+                    <label>Kullanıcı Adı</label>
+                    <input type="text" id="regUsername" class="form-input" placeholder="Kullanıcı adı belirleyin"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label>Şifre</label>
+                    <input type="password" id="regPassword" class="form-input" placeholder="********" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-login">Kayıt Ol</button>
+                <div id="registerError" class="login-error">
+                    Bu kullanıcı adı zaten kullanılıyor!
+                </div>
+                <div id="registerSuccess"
+                    style="color: var(--success); margin-top: 15px; font-size: 14px; display: none;">
+                    Kayıt başarılı! Giriş ekranına yönlendiriliyorsunuz...
+                </div>
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; font-size: 14px;">
+                    Zaten hesabınız var mı? <a href="#" onclick="app.showLogin(event)"
+                        style="color: var(--primary); text-decoration: none; font-weight: 600;">Giriş Yap</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="app-container" id="appContainer" style="display: none;">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                        <rect width="40" height="40" rx="10" fill="url(#gradient1)" />
+                        <path
+                            d="M20 12C17.2 12 15 14.2 15 17C15 19.8 17.2 22 20 22C22.8 22 25 19.8 25 17C25 14.2 22.8 12 20 12ZM20 28C15 28 11 25.5 11 23V21C11 19.3 15 17 20 17C25 17 29 19.3 29 21V23C29 25.5 25 28 20 28Z"
+                            fill="white" />
+                        <defs>
+                            <linearGradient id="gradient1" x1="0" y1="0" x2="40" y2="40">
+                                <stop offset="0%" stop-color="#667eea" />
+                                <stop offset="100%" stop-color="#764ba2" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <span>Personel Takip</span>
+                </div>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item active" data-page="personel-listesi">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <path
+                            d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                    </svg>
+                    <span>Personel Listesi</span>
+                </li>
+                <li class="nav-item" data-page="puantaj">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <path
+                            d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" />
+                    </svg>
+                    <span>Puantaj</span>
+                </li>
+                <li class="nav-item" data-page="bordro">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <path
+                            d="M8 5a1 1 0 100 2h5.586l-1.293 1.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L13.586 5H8zM12 15a1 1 0 100-2H6.414l1.293-1.293a1 1 0 10-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L6.414 15H12z" />
+                    </svg>
+                    <span>Bordro</span>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <button class="export-btn" id="exportExcel" style="margin-bottom: 10px;">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <path
+                            d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" />
+                    </svg>
+                    Excel'e Aktar
+                </button>
+
+                <div style="display: flex; gap: 5px;">
+                    <button class="btn btn-secondary btn-sm" id="backupBtn"
+                        style="flex: 1; display: flex; justify-content: center; align-items: center; gap: 5px;"
+                        title="Verileri Yedekle (İndir)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
+                        </svg>
+                        Yedekle
+                    </button>
+                    <button class="btn btn-secondary btn-sm" id="restoreBtn"
+                        style="flex: 1; display: flex; justify-content: center; align-items: center; gap: 5px;"
+                        title="Verileri Geri Yükle (Yükle)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12" />
+                        </svg>
+                        Yükle
+                    </button>
+                    <input type="file" id="restoreInput" accept=".json" style="display: none;">
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Personel Listesi Page -->
+            <div class="page active" id="personel-listesi">
+                <div class="page-header">
+                    <div>
+                        <h1>Personel Listesi</h1>
+                        <p class="page-description">Tüm personel bilgilerini görüntüleyin ve yönetin</p>
+                    </div>
+                    <button class="btn btn-primary" id="addPersonelBtn">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path
+                                d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" />
+                        </svg>
+                        Yeni Personel
+                    </button>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                                <path
+                                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <p class="stat-label">Toplam Personel</p>
+                            <p class="stat-value" id="totalPersonel">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                                <path
+                                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <p class="stat-label">Toplam Maaş</p>
+                            <p class="stat-value" id="totalMaas">0,00 ₺</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                                <path
+                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <p class="stat-label">Bu Ay Bordro</p>
+                            <p class="stat-value" id="totalBordro">0,00 ₺</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Personel Adı Soyadı</th>
+                                <th>Maaş</th>
+                                <th>Günlük Çalışma</th>
+                                <th>Mesai Çarpanı</th>
+                                <th>Yıllık İzin</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody id="personelTableBody">
+                            <tr class="empty-state">
+                                <td colspan="8">
+                                    <div class="empty-state-content">
+                                        <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+                                            <circle cx="32" cy="32" r="32" fill="#f3f4f6" />
+                                            <path
+                                                d="M32 20c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm0 20c-6.7 0-12 3.3-12 6v2h24v-2c0-2.7-5.3-6-12-6z"
+                                                fill="#9ca3af" />
+                                        </svg>
+                                        <p>Henüz personel eklenmemiş</p>
+                                        <button class="btn btn-primary"
+                                            onclick="document.getElementById('addPersonelBtn').click()">İlk Personeli
+                                            Ekle</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Puantaj Page -->
+            <div class="page" id="puantaj">
+                <div class="page-header">
+                    <div>
+                        <h1>Puantaj Girişi</h1>
+                        <p class="page-description">Aylık puantaj bilgilerini girin ve yönetin</p>
+                    </div>
+                    <button class="btn btn-primary" id="addPuantajBtn">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path
+                                d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" />
+                        </svg>
+                        Yeni Puantaj
+                    </button>
+                </div>
+
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label>Ay/Yıl Seçin</label>
+                        <input type="month" id="puantajMonth" class="form-input">
+                    </div>
+                    <div class="filter-group">
+                        <label>Personel Filtrele</label>
+                        <select id="puantajPersonelFilter" class="form-select">
+                            <option value="">Tüm Personel</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Tarih</th>
+                                <th>Personel</th>
+                                <th>Giriş</th>
+                                <th>Çıkış</th>
+                                <th>Çalışma</th>
+                                <th>Mesai</th>
+                                <th>Durum</th>
+                                <th>Günlük Ücret</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody id="puantajTableBody">
+                            <tr class="empty-state">
+                                <td colspan="9">
+                                    <div class="empty-state-content">
+                                        <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+                                            <circle cx="32" cy="32" r="32" fill="#f3f4f6" />
+                                            <path d="M20 16h24v4H20v-4zm0 8h24v4H20v-4zm0 8h24v4H20v-4zm0 8h16v4H20v-4z"
+                                                fill="#9ca3af" />
+                                        </svg>
+                                        <p>Henüz puantaj kaydı eklenmemiş</p>
+                                        <button class="btn btn-primary"
+                                            onclick="document.getElementById('addPuantajBtn').click()">İlk Puantajı
+                                            Ekle</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Bordro Page -->
+            <div class="page" id="bordro">
+                <div class="page-header">
+                    <div>
+                        <h1>Bordro Görüntüleme</h1>
+                        <p class="page-description">Personel bordrosunu görüntüleyin ve yazdırın</p>
+                    </div>
+                </div>
+
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label>Personel Seçin</label>
+                        <select id="bordroPersonelSelect" class="form-select">
+                            <option value="">Personel Seçiniz</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Ay/Yıl Seçin</label>
+                        <input type="month" id="bordroMonth" class="form-input">
+                    </div>
+                    <div class="filter-actions">
+                        <button class="btn btn-secondary" id="showBordroBtn">Bordro Göster</button>
+                        <button class="btn btn-primary" id="exportPDF" style="display: none;">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            PDF İndir
+                        </button>
+                    </div>
+                </div>
+
+                <div id="bordroContent" class="bordro-container" style="display: none;">
+                    <div class="bordro-header">
+                        <h2>ÜCRET BORDROSU</h2>
+                        <div class="bordro-info">
+                            <p><strong>Personel:</strong> <span id="bordroPersonelName"></span></p>
+                            <p id="bordroTelRow" style="display: none;"><strong>Tel:</strong> <span
+                                    id="bordroPersonelTel"></span></p>
+                            <p><strong>Dönem:</strong> <span id="bordroPeriod"></span></p>
+                            <p><strong>Tarih:</strong> <span id="bordroDate"></span></p>
+                        </div>
+                    </div>
+
+                    <div class="bordro-section">
+                        <h3>Kazançlar</h3>
+                        <table class="bordro-table">
+                            <tbody id="bordroKazanclar"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="bordro-section">
+                        <h3>Kesintiler</h3>
+                        <table class="bordro-table">
+                            <tbody id="bordroKesintiler"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="bordro-summary">
+                        <div class="summary-row">
+                            <span>Toplam Kazanç:</span>
+                            <strong id="bordroToplamKazanc">0,00 ₺</strong>
+                        </div>
+                        <div class="summary-row">
+                            <span>Toplam Kesinti:</span>
+                            <strong id="bordroToplamKesinti">0,00 ₺</strong>
+                        </div>
+                        <div class="summary-row bank-net">
+                            <span>Bankadan Ödenecek Net:</span>
+                            <strong id="bordroBankaNet">0,00 ₺</strong>
+                        </div>
+                        <div class="summary-row cash-net">
+                            <span>Elden Ödenecek Net:</span>
+                            <strong id="bordroEldenNet">0,00 ₺</strong>
+                        </div>
+                        <div class="summary-row total" style="margin-top: 10px;">
+                            <span>Genel Toplam Net:</span>
+                            <strong id="bordroNetOdeme">0,00 ₺</strong>
+                        </div>
+                    </div>
+
+                    <div id="bordroIbanSection" class="bordro-iban-section">
+                        <h3>IBAN Numarası</h3>
+                        <p id="bordroIbanValue">
+                        </p>
+                    </div>
+
+                    <div class="bordro-actions">
+                        <button class="btn btn-secondary" onclick="window.print()">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                <path
+                                    d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zm0 8H7v4h6v-4z" />
+                            </svg>
+                            Yazdır
+                        </button>
+                    </div>
+                </div>
+
+                <div id="bordroEmpty" class="empty-state-content" style="padding: 60px 20px;">
+                    <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+                        <circle cx="32" cy="32" r="32" fill="#f3f4f6" />
+                        <path d="M24 20h16v4H24v-4zm-4 8h24v16H20V28zm8 4h8v2h-8v-2zm0 4h8v2h-8v-2z" fill="#9ca3af" />
+                    </svg>
+                    <p>Bordro görüntülemek için personel ve dönem seçiniz</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Personel Modal -->
+    <div class="modal" id="personelModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="personelModalTitle">Yeni Personel Ekle</h2>
+                <button class="modal-close" onclick="closePersonelModal()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <form id="personelForm">
+                <input type="hidden" id="personelId">
+                <div class="form-group">
+                    <label>Personel Adı Soyadı *</label>
+                    <input type="text" id="personelAd" class="form-input" required>
+                </div>
+                <div class="form-row salary-row">
+                    <div class="form-group phone-group">
+                        <label style="white-space: nowrap;">Telefon No</label>
+                        <input type="tel" id="personelTel" class="form-input" placeholder="05XX XXX XX XX">
+                    </div>
+                    <div class="form-group salary-group">
+                        <label style="white-space: nowrap;">Banka Maaşı (₺) *</label>
+                        <input type="number" id="personelBankaMaas" class="form-input" step="0.01" value="0" required>
+                    </div>
+                    <div class="form-group salary-group">
+                        <label style="white-space: nowrap;">Elden Maaş (₺) *</label>
+                        <input type="number" id="personelEldenMaas" class="form-input" step="0.01" value="0" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>IBAN Numarası</label>
+                    <input type="text" id="personelIban" class="form-input"
+                        placeholder="TR00 0000 0000 0000 0000 0000 00">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Yıllık İzin Hakkı (Gün)</label>
+                        <input type="number" id="personelIzin" class="form-input" value="14">
+                    </div>
+                    <div class="form-group">
+                        <label>Günlük Çalışma Saati *</label>
+                        <input type="number" id="personelGunlukSaat" class="form-input" step="0.5" value="8" required>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label>Mesai Ücreti Çarpanı *</label>
+                    <input type="number" id="personelMesaiCarpan" class="form-input" step="0.1" value="1.5" required>
+                    <small style="color: var(--text-secondary); font-size: 12px;">Örn: 1.5 (Saatlik ücretin 1.5
+                        katı)</small>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closePersonelModal()">İptal</button>
+                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Puantaj Modal -->
+    <div class="modal" id="puantajModal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2 id="puantajModalTitle">Yeni Puantaj Ekle</h2>
+                <button class="modal-close" onclick="closePuantajModal()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <form id="puantajForm">
+                <input type="hidden" id="puantajId">
+                <div class="form-group">
+                    <label>Personel Seçin *</label>
+                    <select class="form-input" id="puantajPersonel" required>
+                        <option value="">Seçiniz...</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tarih / Başlangıç *</label>
+                        <input type="date" class="form-input" id="puantajTarih" required>
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox" id="puantajAralikSecimi">
+                            <label for="puantajAralikSecimi">Çoklu Gün / Aralık Seç</label>
+                        </div>
+                    </div>
+                    <div class="form-group" id="divBitisTarihi" style="display:none;">
+                        <label>Bitiş Tarihi *</label>
+                        <input type="date" class="form-input" id="puantajBitisTarihi">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>İşe Giriş Saati *</label>
+                        <input type="time" id="puantajGirisSaati" class="form-input" value="09:00" required>
+                    </div>
+                    <div class="form-group">
+                        <label>İşten Çıkış Saati *</label>
+                        <input type="time" id="puantajCikisSaati" class="form-input" value="18:00" required>
+                    </div>
+                </div>
+                <div class="form-row three-col">
+                    <div class="form-group">
+                        <label>Çalışılan Saat</label>
+                        <input type="number" id="puantajToplamSaat" class="form-input" step="0.5" value="0" readonly>
+                        <small style="color: var(--text-secondary); font-size: 12px;">Otomatik hesaplanır</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Mesai Saati</label>
+                        <input type="number" id="puantajMesaiSaat" class="form-input" step="0.5" value="0" min="0"
+                            readonly>
+                        <small style="color: var(--text-secondary); font-size: 12px;">Otomatik hesaplanır</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Eksik Mesai (Saat)</label>
+                        <input type="number" id="puantajEksikMesaiSaat" class="form-input" step="0.5" value="0" min="0"
+                            readonly>
+                        <small style="color: var(--text-secondary); font-size: 12px;">Otomatik hesaplanır</small>
+                    </div>
+                </div>
+                <div class="form-row three-col">
+                    <div class="form-group">
+                        <label>Mesai Ücreti (₺)</label>
+                        <input type="number" id="puantajMesaiUcret" class="form-input" step="0.01" value="0" readonly>
+                        <small style="color: var(--text-secondary); font-size: 12px;">Otomatik hesaplanır</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Eksik Mesai Kesintisi (₺)</label>
+                        <input type="number" id="puantajEksikMesaiUcret" class="form-input input-danger" step="0.01"
+                            value="0" readonly>
+                        <small style="color: var(--text-secondary); font-size: 12px;">Otomatik hesaplanır</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Günlük Toplam Ücret (₺)</label>
+                        <input type="number" id="puantajGunlukUcret" class="form-input" step="0.01" value="0" readonly>
+                        <small style="color: var(--text-secondary); font-size: 12px;">Günlük ücret + mesai -
+                            kesinti</small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>İzin/Durum</label>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="izinTuru" value="calisti" checked>
+                            <span>Çalıştı</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="izinTuru" value="yillik">
+                            <span>Yıllık İzin</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="izinTuru" value="ucretsiz">
+                            <span>Ücretsiz İzin</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="izinTuru" value="rapor">
+                            <span>Rapor</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="izinTuru" value="yok">
+                            <span>Gelmedi</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Yemek Ücreti (₺)</label>
+                        <input type="number" class="form-input" id="puantajYemek" step="0.01" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Yol Ücreti (₺)</label>
+                        <input type="number" class="form-input" id="puantajYol" step="0.01" value="0">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Prim (₺)</label>
+                        <input type="number" class="form-input" id="puantajPrim" step="0.01" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Avans (₺)</label>
+                        <input type="number" class="form-input" id="puantajAvans" step="0.01" value="0">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Diğer Ödeme (₺)</label>
+                        <input type="number" class="form-input" id="puantajDigerOdeme" step="0.01" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Ödeme Açıklaması</label>
+                        <input type="text" class="form-input" id="puantajDigerOdemeAciklama"
+                            placeholder="Örn: Bayram Harçlığı">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Diğer Kesinti (₺)</label>
+                        <input type="number" class="form-input" id="puantajDigerKesinti" step="0.01" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Kesinti Açıklaması</label>
+                        <input type="text" class="form-input" id="puantajDigerKesintiAciklama"
+                            placeholder="Örn: Trafik Cezası">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Genel Not</label>
+                    <textarea id="puantajNot" class="form-input" rows="2"
+                        placeholder="Opsiyonel not ekleyebilirsiniz..."></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closePuantajModal()">İptal</button>
+                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="daily_helpers.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>

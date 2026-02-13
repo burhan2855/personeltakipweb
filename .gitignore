@@ -1,0 +1,4 @@
+*.xlsx
+*.json
+.DS_Store
+Thumbs.db
